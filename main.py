@@ -1,27 +1,29 @@
 from fastapi import FastAPI
+from typing import List
 
 app = FastAPI()
 
-llista_users=["valeria","paco","martina"]
+# Llista inicial d'usuaris amb un nom i ID
+users = [{"id": 1, "name": "valeria"}]
 
-# response_model=dict
-# response_model=str
-# @app.get(path:/hola", response_model=dict
-
-
+# Model per a rebre un usuari nou
+# Obtenir tots els usuaris
 @app.get("/users")
-def read_root():
-    return {"result": llista_users}
+def read_users():
+    return {"result": users}
 
-@app.get("/users/{user_id}")
-def read_user(user_id: int):
-    return {"message": user_id}
+# Afegir un nou usuari
+@app.post("/api/users")
+def add_user(user: users):  # Rebem un objecte 'user' del model 'User'
+    new_id = len(users) + 1
+    new_user = {"id": new_id, "name": user.name}
+    users.append(new_user)
+    return {"users": users}
 
-@app.post("/users")
-def add_user():
-    return {"message": "Aix es un post"}
-
-@app.delete("/users/del")
-def del_user():
-    return {"message": "Aix es un post"}
-
+# Obtenir un usuari pel seu ID
+@app.get("/api/users/{id}")
+def get_user(id: int):
+    for user in users:
+        if user["id"] == id:
+            return {"result": user}
+    return {"error": "User not found"}
