@@ -17,3 +17,4 @@ class ProductPublic(SQLModel):
     price: float
     stock: int
     category: str
+
